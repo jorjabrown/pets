@@ -40,6 +40,16 @@ $app->get('/list', function() use ($app, $conn) {
 	echo json_encode($ret);
 });
 
+$app->get('/listPets', function() use ($app, $conn) {
+    $sql = 'select o.oid,p.pid, p.name, p.type, p.breed from owner o, pet p, owns os where o.oid = os.oid and p.pid = os.pid order by type, breed, name';
+    $stmt = $conn->query($sql);
+    $ret = array();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC) )
+    {
+		array_push($ret, $row);
+    }
+	echo json_encode($ret);
+});
 $app->get('/another_endpoint', function () use ($app, $conn) {
     $ret = array("some_key" => "some value");
     echo json_encode($ret);

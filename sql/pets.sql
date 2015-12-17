@@ -3,6 +3,8 @@ These are comments:
 pet(pid, type, name, dob, breed)  dob - date of birth
 owner(oid, fname, lname)
 owns(pid, oid, dop)   dop - date of purchase
+This is a new line of commentary
+and another
 */
 drop database if exists Pets;
 

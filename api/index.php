@@ -29,7 +29,7 @@ $app->response->headers->set( 'Content-Type', 'application/json' );
  * argument for `Slim::get`, `Slim::post`, `Slim::put`, `Slim::patch`, and `Slim::delete`
  * is an anonymous function.
  */
-$app->get('/list', function() use ($app, $conn) {
+$app->get('/list/owners', function() use ($app, $conn) {
     $sql = 'select * from owner';
     $stmt = $conn->query($sql);
     $ret = array();
@@ -40,9 +40,18 @@ $app->get('/list', function() use ($app, $conn) {
 	echo json_encode($ret);
 });
 
-$app->get('/listPets', function() use ($app, $conn) {
-    $sql = 'select o.oid,p.pid, p.name, p.type, p.breed from owner o, pet p, owns os where o.oid = os.oid and p.pid = os.pid order by type, breed, name';
-    $stmt = $conn->query($sql);
+$app->get('/list/pets', function() use ($app, $conn) {
+	$get = $app->request->get();   //get variables passed in after ? in url
+	if (isset($get['pid']))
+	{
+		$pid = $get['pid'];
+		$sql ="select o.oid,p.pid, p.name, p.type, p.breed, o.fname, o.lname from owner o, pet p, owns os where p.pid = '$pid' and o.oid = os.oid and p.pid = os.pid order by type, breed, name";	
+	}
+	else
+	{
+		$sql = 'select o.oid,p.pid, p.name, p.type, p.breed, o.fname, o.lname from owner o, pet p, owns os where o.oid = os.oid and p.pid = os.pid order by type, breed, name';
+    }
+	$stmt = $conn->query($sql);
     $ret = array();
     while($row = $stmt->fetch(PDO::FETCH_ASSOC) )
     {
@@ -50,6 +59,7 @@ $app->get('/listPets', function() use ($app, $conn) {
     }
 	echo json_encode($ret);
 });
+
 $app->get('/another_endpoint', function () use ($app, $conn) {
     $ret = array("some_key" => "some value");
     echo json_encode($ret);

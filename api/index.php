@@ -36,6 +36,12 @@ $app->get('/owners', function() use ($app, $conn) {
 	echo json_encode($ret);
 	
 });
+$app->get('/pets', function() use ($app, $conn) {
+//put a list of valid urls to show usage  added 1/6/2016
+	$ret = array("/pets/list" => "GET", "/pets/add" => "POST");
+	echo json_encode($ret);
+	
+});
  
 $app->get('/owners/list', function() use ($app, $conn) {
 /*
@@ -126,11 +132,11 @@ the pet table and the owns table
 	$dob = $post['dob'];
 	$oid = $post['oid'];
 	
-	error_log('before get date');
+	//error_log('before get date');
 	$dop = date("Y-m-d");  //use the current date
-	error_log('after get date');
+	//error_log('after get date');
 	$sql = 'insert into pet (type, name, dob, breed) values (?,?,?,?)';
-	error_log("type is $type, name is $name, dob is $dob, breed is $breed, oid is $oid");
+//	error_log("type is $type, name is $name, dob is $dob, breed is $breed, oid is $oid");
 	$stmt = $conn->prepare($sql);
 	$ok = $stmt->execute(array($type,$name,$dob,$breed) );
 	if ($ok)
@@ -150,11 +156,11 @@ the pet table and the owns table
 		}
 		echo json_encode($ret);
 	}
-	/*else
+	else  //added this on 1/6/2016
 	{
 		$ret = array("pid" => "not found, error");
 		echo json_encode($ret);
-	} */
+	} 
 	
 });
 
@@ -163,7 +169,7 @@ $app->post('/owners/add', function () use ($app, $conn){
     $ret = array();
     $fname = $post['fname'];
     $lname = $post['lname'];
-    error_log("first name is $fname, last name is $lname");
+//    error_log("first name is $fname, last name is $lname");
     $sql = 'insert into owner (fname, lname) values (?,?)';
 	$stmt = $conn->prepare($sql);
 	$ok = $stmt->execute(array($fname,$lname));
